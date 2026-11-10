@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gatecrasher vote</title>
+<style>
+:root { color-scheme: dark; }
+html, body { margin: 0; min-height: 100%; background: #0d0b18; color: #f6eee1; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 17px; line-height: 1.38; -webkit-text-size-adjust: 100%; }
+#v { box-sizing: border-box; max-width: 34em; margin: 0 auto; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; padding: max(14px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.16); }
+header b { letter-spacing: 0.16em; font-size: 0.86em; color: #ffd27a; } header .room { font-size: 0.86em; color: rgba(246, 238, 225, 0.74); font-variant-numeric: tabular-nums; }
+main { flex: 1; display: flex; flex-direction: column; padding-top: 16px; }
+.state { font-size: 1.5em; line-height: 1.25; margin: auto 0; text-align: center; font-family: Georgia, 'Times New Roman', serif; } .state.small { font-size: 1em; color: rgba(246, 238, 225, 0.74); margin: 1.4em 0 0; font-family: inherit; }
+.kick { font-size: 0.74em; letter-spacing: 0.16em; text-transform: uppercase; color: #ffd27a; font-weight: 700; margin: 0 0 6px; }
+.ctx { font-size: 0.9em; color: rgba(246, 238, 225, 0.74); margin: 0 0 10px; }
+.q { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 1.45em; line-height: 1.22; margin: 0 0 12px; }
+.how, .sent, .chose { margin: 0 0 10px; color: rgba(246, 238, 225, 0.74); font-size: 0.92em; } .sent { margin-top: 12px; } .chose { color: #f6eee1; font-size: 1.1em; }
+.opts { display: flex; flex-direction: column; gap: 9px; }
+.opt { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; text-align: left; width: 100%; box-sizing: border-box; font: inherit; color: inherit; background: rgba(255, 255, 255, 0.07); border: 1.5px solid rgba(255, 255, 255, 0.2); border-radius: 14px; padding: 12px 14px 12px 12px; min-height: 58px; cursor: pointer; -webkit-tap-highlight-color: transparent; margin: 0 0 9px; }
+.opts .opt { margin: 0; }
+.opt b { width: 2.1em; height: 2.1em; border-radius: 0.55em; display: grid; place-items: center; background: #ffd27a; color: #1a1420; font-weight: 800; }
+.opt.path { border-style: dashed; } .opt.path b { background: transparent; color: #ffd27a; box-shadow: inset 0 0 0 1.5px #ffd27a; }
+.opt.on { background: rgba(255, 210, 122, 0.3); border-color: #ffd27a; }
+.ask { margin: auto 0; display: flex; flex-direction: column; gap: 12px; align-items: center; } .ask .state { margin: 0; }
+.ask input { font: inherit; font-size: 1.6em; letter-spacing: 0.3em; text-align: center; text-transform: uppercase; width: 7em; padding: 10px; border-radius: 12px; border: 1.5px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.08); color: inherit; }
+.go { font: inherit; font-weight: 700; background: #ffd27a; color: #1a1420; border: none; border-radius: 999px; padding: 12px 34px; min-height: 48px; }
+footer { min-height: 1.4em; font-size: 0.84em; color: #ff9d92; text-align: center; padding-top: 10px; }
+button:focus-visible, input:focus-visible { outline: 2px solid #ffd27a; outline-offset: 2px; }
+</style>
+</head><body>
+<div id="v"></div>
+<script>
+(()=>{var S=new URLSearchParams(location.search),m=(S.get("s")||""||"").trim().replace(/\.json$/,"").replace(/\/+$/,""),T=document.getElementById("v"),b="ABCDEFGHIJ",n=(t,o,c)=>{let i=document.createElement(t);return o&&(i.className=o),c!==void 0&&(i.textContent=c),i},s={title:"GATECRASHER",room:"Room",wait:"Look at the big screen.",type:"Type the room code from the big screen.",join:"Join",many:"Choose each one that you want.",manyK:t=>"Choose "+t+".",sent:t=>"Your vote: "+t+". You can change it.",none:"Tap an answer to vote.",chose:t=>"The room chose "+t+".",yours:t=>"Your vote was "+t+".",lost:"No connection. The page tries again.",noStore:"This page has no vote store. Scan the code on the big screen again."},l=(S.get("v")||"").toUpperCase().replace(/[^A-Z]/g,"").slice(0,6),h,e=null,a=[],d=0,v="";try{h=localStorage.getItem("gc-voter")}catch{}if(!h){h=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-3);try{localStorage.setItem("gc-voter",h)}catch{}}var E=t=>m+"/gc/"+l+"/"+t+".json",k=(t,o)=>fetch(E(t),{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)}).then(c=>c.ok).catch(()=>!1),w=t=>t.map(o=>b[o]).join(", ");function u(){let t=n("header");t.append(n("b",null,s.title),n("span","room",l?s.room+" "+l:""));let o=n("main"),c=n("footer",d>2?"lost":"",d>2?s.lost:"");if(!m)o.append(n("p","state",s.noStore));else if(l)if(!e||e.wait||!e.opts)o.append(n("p","state",s.wait));else if(o.append(n("p","kick",e.head||"")),e.ctx&&e.open&&o.append(n("p","ctx",e.ctx)),o.append(n("h1","q",e.q||"")),e.open){e.multi>=0&&o.append(n("p","how",e.how||(e.multi>0?s.manyK(e.multi):s.many)));let i=n("div","opts");e.opts.forEach((p,r)=>{if(e.off&&e.off[r])return;let f=n("button","opt"+(a.includes(r)?" on":"")+(r>=e.nOpt?" path":""));f.type="button",f.append(n("b",null,b[r]),n("span",null,p)),f.onclick=()=>C(r),i.append(f)}),o.append(i,n("p","sent",a.length?s.sent(w(a)):s.none))}else{let i=e.pick||[];o.append(n("p","chose",s.chose(w(i))));for(let p of i)if(e.opts[p]){let r=n("div","opt on");r.append(n("b",null,b[p]),n("span",null,e.opts[p])),o.append(r)}a.length&&o.append(n("p","sent",s.yours(w(a)))),o.append(n("p","state small",s.wait))}else{let i=n("form","ask"),p=n("input"),r=n("button","go",s.join);p.maxLength=6,p.autocapitalize="characters",p.autocomplete="off",p.setAttribute("aria-label",s.type),r.type="submit",i.append(n("p","state",s.type),p,r),i.onsubmit=f=>{f.preventDefault(),l=p.value.toUpperCase().replace(/[^A-Z]/g,""),l&&(g(),u(),y())},o.append(i)}T.replaceChildren(t,o,c)}function C(t){!e||!e.open||(e.multi>=0&&t<e.nOpt?(a=a.filter(o=>o<e.nOpt),a.includes(t)?a=a.filter(o=>o!==t):(a.push(t),e.multi>0&&a.length>e.multi&&a.shift()),a.sort((o,c)=>o-c)):a=a.length===1&&a[0]===t?[]:[t],k("votes/"+e.id+"/"+h,a.join(",")),u())}function g(){l&&m&&k("here/"+h,Date.now())}async function y(){if(!(!l||!m))try{let t=await fetch(E("now"),{cache:"no-store"});if(!t.ok)throw 0;let o=await t.json(),c=JSON.stringify(o);d=0,o&&(!e||o.id!==e.id)&&(a=[]),c!==v?(v=c,e=o,u()):T.querySelector("footer.lost")&&u()}catch{d++,d===3&&u()}}u();g();y();setInterval(y,1200);setInterval(g,25e3);document.addEventListener("visibilitychange",()=>{document.hidden||(g(),y())});window.__v={get cur(){return e},get mine(){return a},tap:C};})();
+
+</script>
+</body></html>
